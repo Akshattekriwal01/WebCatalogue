@@ -1,0 +1,29 @@
+<%include partials/header%>
+
+<div class="container">
+    <header class="jumbotron">
+    <div class = "container">
+        <h1>Welcome</h1>
+        <p> some details can go in here </p>
+        <p>
+        <a class="btn btn-primary btn-large" href="/campground/new"> Create a Camp </a>
+        </p></div>
+
+        </header>
+        <!-- use this style to fix heigt of images-->
+    <div class="row text-center" style="display:flex; flex-wrap:wrap;">
+        <% campgrounds.forEach(function(x){ %>
+        <!-- each image in md takes 3 units -->
+        <div class="col-md-3 col-sm-6">
+            <div class="thumbnail">
+            <img src ="<%= x.image %>">
+                <div class="caption">
+                <h4><%= x.name %></h4>
+                </div>
+            </div>
+        </div>
+        <% }); %> 
+    </div>
+</div>
+
+<%include partials/footer%>
