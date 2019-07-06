@@ -14,6 +14,8 @@ mongoose.connect("mongodb://localhost:27017/mycamp", {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 
+app.use(express.static(__dirname + "/public"));
+
 //SCHEMA SETUP  and model creation with cpital name
 
 // CampModel.create(
@@ -98,7 +100,7 @@ app.get("/campground/:id", (req, res) => {
 });
 
 //========================================
-
+// submiting new comments
 app.post("/campground/:id/comment", (req, res) => {
   id = req.params.id;
   content = req.body.content;
