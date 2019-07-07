@@ -5,7 +5,9 @@
         <h1>Welcome</h1>
         <p> some details can go in here </p>
         <p>
-        <a class="btn btn-primary btn-large" href="/campground/new"> Create a Camp </a>
+        <form action="/campground/new" method="GET">
+        <button id="button4" style="border-radius:10px"> Create a Business</button>
+        </form>
         </p></div>
 
         </header>
@@ -14,13 +16,15 @@
         <% campgrounds.forEach(function(x){ %>
         <!-- each image in md takes 3 units -->
         <div class="col-md-3 col-sm-6">
+        <a href="/campground/<%=x._id%>" >
             <div class="thumbnail">
             <img src ="<%= x.image %>">
                 <div class="caption">
-                <h4><%= x.name %></h4>
+                <h4 ><%= x.name %></h4>
                 </div>
-                <p><a href="/campground/<%=x._id%>" class="btn btn-block btn-primary">More Info</a>
-                <p>
+               <!-- <p><a href="/campground/<%=x._id%>" class="btn btn-block" id="card-button">More Info</a>-->
+               <!-- <p>-->
+               </a>
             </div>
         </div>
         <% }); %> 

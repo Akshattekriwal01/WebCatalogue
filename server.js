@@ -1,3 +1,4 @@
+//requirind dependencies
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
@@ -6,6 +7,14 @@ const CampModel = require("./models/camp");
 const seedDB = require("./seeds");
 const CommentM = require("./models/comment");
 const ejsLint = require("ejs-lint");
+const passport = require("passport");
+const localStrategy = require("passport-local");
+const UserM = require("./models/user");
+//requiring routes
+const campgroundRoutes = require("./routes/campgrounds"),
+  commentRoutes = require("./routes/comments"),
+  indexRoutes = require("./routes/index");
+
 seedDB();
 
 mongoose.connect("mongodb://localhost:27017/mycamp", {
@@ -16,116 +25,31 @@ app.set("view engine", "ejs");
 
 app.use(express.static(__dirname + "/public"));
 
-//SCHEMA SETUP  and model creation with cpital name
-
-// CampModel.create(
-//   {
-//     name: "bimb",
-//     image:
-//       "https://images.idgesg.net/images/article/2019/04/google-shift-100794036-large.jpg",
-//     description: "this is description written mannualy from the backend"
-//   },
-//   (err, result) => {
-//     if (err) {
-//       console.log(err);
-//     } else {
-//       console.log("newly created camp ground");
-//       print(result);
-//     }
-//   }
-// );
-
-app.get("/", (req, res) => {
-  res.render("landing");
+//passport configuration
+app.use(
+  require("express-session")({
+    secret: "kabhi kabhi mere dil mei kuh kuch hota hai",
+    resave: false,
+    saveUninitialized: false
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(UserM.authenticate()));
+passport.serializeUser(UserM.serializeUser());
+passport.deserializeUser(UserM.deserializeUser());
+//passing the current user to the
+app.use((req, res, next) => {
+  res.locals.currentUser = req.user;
+  next();
 });
-
-function print(x) {
-  console.log(x);
-}
-
-campground = [];
-//INDEX Route
-app.get("/campground", (req, res) => {
-  //we need to get all the camp ground from the db and render that file
-  CampModel.find({}, (err, result) => {
-    if (err) {
-      print(err);
-    } else {
-      res.render("campgrounds/Index", { campgrounds: result });
-    }
-  });
-});
-
-// create new campgrounds
-// CREATE Route
-app.post("/campground", (req, res) => {
-  //get data fromt the forms and the camp to the array
-  // get back to .get("/campgrounds")
-  let name = req.body.name;
-  let image = req.body.image;
-  let desc = req.body.description;
-  let obj = { name: name, image: image, description: desc };
-  CampModel.create(obj, (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log("newly created camp ground");
-    }
-  });
-  //default redirect is to get route
-  res.redirect("/campground");
-});
-
-//NEW Route
-app.get("/campground/new", (req, res) => {
-  res.render("campgrounds/new");
-});
-
-//SHOW route
-app.get("/campground/:id", (req, res) => {
-  //find the camp ground
-  //render the found camp ground
-  // id stored in req.params.id
-
-  CampModel.findById(req.params.id)
-    .populate("comments")
-    .exec((err, result) => {
-      if (err) {
-        print(err);
-      } else {
-        //result.comments.forEach(x => print(x.text));
-        res.render("campgrounds/show", { campground: result });
-      }
-    });
-});
-
-//========================================
-// submiting new comments
-app.post("/campground/:id/comment", (req, res) => {
-  id = req.params.id;
-  content = req.body.content;
-  CommentM.create(
-    { text: content, author: "some author" },
-    (err, commentResult) => {
-      if (err) print(err);
-      else {
-        CampModel.findById(id, (err, campResult) => {
-          if (err) print(err);
-          else {
-            campResult.comments.push(commentResult);
-            campResult.save();
-            //commentResult.save();
-            console.log(commentResult);
-            CommentM.find({ text: content }, (err, r) => {
-              console.log(r);
-            });
-            res.redirect("/campground/" + id);
-          }
-        });
-      }
-    }
-  );
-});
+//express router usage
+// app.use(campgroundRoutes);
+// to shorten comments use {mergeparams: true} insdie express.router()
+//we'll shoerten the  campground route because "/camprgound" is common in all the routes in the fileroutes above
+app.use(indexRoutes);
+app.use("/campground", campgroundRoutes);
+app.use(commentRoutes);
 
 app.listen(3000, () => {
   console.log("what the mothaerfucker");
