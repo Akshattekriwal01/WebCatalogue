@@ -19,11 +19,9 @@ router.post("/campground/:id/comment", isLoggedIn, (req, res) => {
           else {
             campResult.comments.push(commentResult);
             campResult.save();
-            //commentResult.save();
-            console.log(commentResult);
-            CommentM.find({ text: content }, (err, r) => {
-              console.log(r);
-            });
+            // CommentM.find({ text: content }, (err, r) => {
+            //   console.log(r);s
+            // });
             res.redirect("/campground/" + id);
           }
         });

@@ -288,9 +288,10 @@ color:white;}
         </div>
         <div class="collapse navbar-collapse">
             <ul class= "nav navbar-nav navbar-right">
-              <%  if(!currentUser){ %>
-                <li><a href="/getin"style="color:white">login</a></li>
-                 <li><a href="/getin"style="color:white">register</a></li>
+			  <%  if(!currentUser){ %>
+			  	<li><a href="/getin/partner"style="color:white">Partner</a></li>
+                <li><a href="/getin"style="color:white">Login</a></li>
+                 <li><a href="/getin"style="color:white">Register</a></li>
                <% } else { %>
                     <li><a href="#"style="color:white">Welcome <%=currentUser.name%></a></li>
                   <li><a href="/logout"style="color:white">logout</a></li>

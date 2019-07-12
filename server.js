@@ -6,10 +6,10 @@ const mongoose = require("mongoose");
 const CampModel = require("./models/camp");
 const seedDB = require("./seeds");
 const CommentM = require("./models/comment");
-const ejsLint = require("ejs-lint");
 const passport = require("passport");
 const localStrategy = require("passport-local");
 const UserM = require("./models/user");
+const partnerM = require("./models/user");
 //requiring routes
 const campgroundRoutes = require("./routes/campgrounds"),
   commentRoutes = require("./routes/comments"),
